@@ -1,6 +1,8 @@
 package list;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ArrayListExample {
@@ -153,5 +155,148 @@ public class ArrayListExample {
         list2.trimToSize();
 
 
+        //ArrayList Declaration
+        List<Integer> list3 = new ArrayList<>();
+        System.out.println(list3.getClass().getName()); //java.util.ArrayList
+
+        //On the fly Creation of ArrayList
+        List<Integer> list4 = Arrays.asList(1, 2, 3, 4, 5);
+        System.out.println(list4.getClass().getName()); //java.util.Arrays$ArrayList
+
+        String[] str = {"Sat", "Sun"};
+        List<String> list5 = Arrays.asList(str);
+        System.out.println(list5.getClass().getName()); //java.util.Arrays$ArrayList
+
+        List<Integer> list6 = List.of(1, 2, 3, 4, 5, 6, 7);
+        System.out.println(list6.getClass().getName()); //java.util.ImmutableCollections$ListN
+
+        /*
+        Why Different?
+        `list3` → `new ArrayList<>()`
+
+        You're explicitly creating a `java.util.ArrayList` — the standard, full-featured ArrayList from
+        the `java.util` package. Nothing surprising here.
+
+        `list4` and `list5` → `Arrays.asList(...)`
+        This does not return a `java.util.ArrayList`.
+        It returns a #private static inner class defined inside the `Arrays` class, which is why the name shows:
+
+        java.util.Arrays$ArrayList
+                    ↑        ↑
+                    outer  inner class
+                    ($ = nested)
+
+         * ┌─────────────────────┬──────────────────┬─────────────────────┬─────────────────────┐
+         * │ Feature             │ new ArrayList<>()│ Arrays.asList()     │ List.of()           │
+         * ├─────────────────────┼──────────────────┼─────────────────────┼─────────────────────┤
+         * │ Resizable           │ Yes              │ No                  │ No                  │
+         * │ add() / remove()    │ Works            │ UnsupportedOpEx     │ UnsupportedOpEx     │
+         * │ set() (update)      │ Works            │ Works               │ UnsupportedOpEx     │
+         * │ Allows null         │ Yes              │ Yes                 │ No                  │
+         * │ Backed by array     │ No               │ Yes (no copy!)      │ No                  │
+         * └─────────────────────┴──────────────────┴─────────────────────┴─────────────────────┘
+
+         Arrays.asList() -> partially mutable (set allowed, add/remove not allowed)
+         List.of()       -> fully immutable   (set, add/remove all not allowed)
+
+
+        The Gotcha with Arrays.asList()
+        javaString[] str = {"Sat", "Sun"};
+        List<String> list5 = Arrays.asList(str);
+        str[0] = "Mon";
+        System.out.println(list5.get(0)); // prints "Mon" ← list reflects the change!
+
+        Since Arrays.asList() wraps the original array (not a copy), changes to the array are
+        reflected in the list and vice versa.
+        */
+
+        List<Integer> list7 = new ArrayList<>(list6); //Converting java.util.ImmutableCollections$ListN to java.util.ArrayList
+        list7.add(45);
+        System.out.println(list7);
+
+        //========Adding Elements===========
+        List<Integer> list8 = new ArrayList<>();
+        list8.add(1);
+        list8.add(2);
+        list8.add(3);
+
+        //Index based adding
+        list8.add(0, 0);
+
+        //Adding Collection
+        List<Integer> list9 = List.of(4, 5, 6, 7, 8, 9);
+        list8.addAll(list9);
+
+        System.out.println(list8);
+
+        //======Removing Elements===========
+        List<String> list10 = new ArrayList<>();
+        list10.add("Apple");
+        list10.add("Banana");
+        list10.add("Cherry");
+        list10.add("Dragon Fruit");
+
+        //Index Based Removal
+        list10.remove(3);
+
+        //Object Based Removal - removes the first occurrence of the object passed
+        list10.remove("Apple");
+
+        System.out.println(list10);
+
+        //Object Based Removal with Integer type
+        List<Integer> list11 = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6));
+
+        /*
+         For index-based  removal: list.remove(1) -> removes element at index 1
+         For object-based removal: list.remove(Integer.valueOf(1)) -> removes element with value 1
+
+         Wrap the value explicitly to avoid accidental index-based removal in Integer lists.
+        */
+
+        list11.remove(Integer.valueOf(1));
+
+        System.out.println(list11);
+
+        //Convert ArrayList to Array
+        List<Integer> list12 = new ArrayList<>(List.of(1, 2, 3));
+
+
+        Object[]  array1 = list12.toArray();
+        Integer[] array2 = list12.toArray(new Integer[0]);
+
+        /*
+         toArray()                  -> returns Object[]  (no type info, needs casting)
+         toArray(new Integer[0])    -> returns Integer[] (typed, preferred, no casting needed)
+
+         Passing new Integer[0] is a hint to JVM to return the correct typed array.
+        */
+
+        System.out.println(Arrays.toString(array1));
+        System.out.println(Arrays.toString(array1));
+
+
+        //=============Sorting=============
+        List<Integer> list13 = new ArrayList<>(List.of(2,5,1,6,9,4,7,12,1));
+        Collections.sort(list13);
+
+        /*
+         Collection  (without 's') -> Interface  (java.util.Collection)
+         Collections (with 's')    -> Utility class (java.util.Collections)
+
+         Collections class provides static utility methods like:
+         sort(), reverse(), shuffle(), min(), max(), frequency() etc.
+        */
+
+        System.out.println(list13);
+
+        /*
+         ArrayList - Time Complexity
+
+         get(index)     -> O(1)  (direct index access)
+         add(element)   -> O(1) amortized, O(n) worst case (when resizing occurs)
+         remove(index)  -> O(n)  (elements need to shift after removal)
+         iteration      -> O(n)
+        */
     }
 }
