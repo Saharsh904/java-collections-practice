@@ -262,7 +262,7 @@ public class ArrayListExample {
         List<Integer> list12 = new ArrayList<>(List.of(1, 2, 3));
 
 
-        Object[]  array1 = list12.toArray();
+        Object[] array1 = list12.toArray();
         Integer[] array2 = list12.toArray(new Integer[0]);
 
         /*
@@ -277,7 +277,7 @@ public class ArrayListExample {
 
 
         //=============Sorting=============
-        List<Integer> list13 = new ArrayList<>(List.of(2,5,1,6,9,4,7,12,1));
+        List<Integer> list13 = new ArrayList<>(List.of(2, 5, 1, 6, 9, 4, 7, 12, 1));
         Collections.sort(list13);
 
         /*
